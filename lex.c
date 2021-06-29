@@ -7,17 +7,17 @@
 #define Δp(L) (L->p - L->p₀)
 #define isnamerune(r) (isalpharune(r) || isdigitrune(r) || r == '_')
 
-#define Reject(L, e) (L->error = e,  -1)
-#define Accept(L) {                         \
+#define reject(L, e) (L->error = e,  -1)
+#define accept(L) {                         \
 	L->p += len;                            \
 	len = chartorune(&r, L->p);             \
 	USED(len);                              \
 	if(r == Runeerror)                      \
-		return Reject(L, "malformed rune"); \
+		return reject(L, "malformed rune"); \
 }
 
 inline int
-Ok(Lexer *L, Token *t, int type)
+token(Lexer *L, Token *t, int type)
 {
 	t->span.p = L->p₀;
 	t->span.len = Δp(L);
@@ -34,35 +34,35 @@ lex(Lexer *L, Token *t)
 	L->error = nil;
 	len = chartorune(&r, L->p);
 	if(r == Runeerror)
-		return Reject(L, "malformed rune");
+		return reject(L, "malformed rune");
 	L->p₀ = L->p;
 	while(*L->p){
 		if(runestrchr(L":⊤→↦×", r)){
-			Accept(L);
-			return Ok(L, t, Symbol);
+			accept(L);
+			return token(L, t, Symbol);
 		}else if(r == '('){
-			Accept(L);
-			return Ok(L, t, Open);
+			accept(L);
+			return token(L, t, Open);
 		}else if(r == ')'){
-			Accept(L);
-			return Ok(L, t, Close);
+			accept(L);
+			return token(L, t, Close);
 		}else if(isspacerune(r)){
-			Accept(L);
+			accept(L);
 			L->p₀ = L->p;
 		}else if(isnamerune(r)){
-			Accept(L);
+			accept(L);
 			while(isnamerune(r))
-				Accept(L);
-			return Ok(L, t, Name);
+				accept(L);
+			return token(L, t, Name);
 		}else if(r == '\n'){
-			Accept(L);
+			accept(L);
 			while(r == '\n')
-				Accept(L);
-			return Ok(L, t, Eol);
+				accept(L);
+			return token(L, t, Eol);
 		}else{
-			return Reject(L, "unexpected rune");
+			return reject(L, "unexpected rune");
 		}
 	}
 
-	return Ok(L, t, Eof);
+	return token(L, t, Eof);
 }
