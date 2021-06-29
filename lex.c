@@ -1,6 +1,7 @@
 #include <u.h>
 #include <libc.h>
 
+#include "misc.h"
 #include "lex.h"
 
 #define Δp(L) (L->p - L->p₀)
@@ -18,10 +19,10 @@
 inline int
 Ok(Lexer *L, Token *t, int type)
 {
-	t->p = L->p₀;
-	t->len = Δp(L);
+	t->span.p = L->p₀;
+	t->span.len = Δp(L);
 	t->type = type;
-	return t->len;
+	return t->span.len;
 }
 
 int

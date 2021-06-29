@@ -18,8 +18,7 @@ struct Lexer {
 };
 
 struct Token {
-	char *p;
-	int len;
+	Slice span;
 	int type;
 };
 

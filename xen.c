@@ -1,6 +1,7 @@
 #include <u.h>
 #include <libc.h>
 
+#include "misc.h"
 #include "expr.h"
 #include "fmt.h"
 #include "lex.h"
@@ -25,10 +26,10 @@ main(int argc, char *argv[])
 	int fd;
 
 	Expr □1 = {□};
-	Expr α1 = {Var, .u = {.var = {"α"}}};
-	Expr α2 = {Var, .u = {.var = {"α"}}};
-	Expr Π1 = {Π, .u = {.abs = {nil, &α1, &α2}}};
-	Expr λ1 = {λ, .u = {.abs = {"α", &□1, &Π1}}};
+	Expr α1 = {Var, .u = {.var = {"α", 2}}};
+	Expr α2 = {Var, .u = {.var = {"α", 2}}};
+	Expr Π1 = {Π, .u = {.abs = {{nil}, &α1, &α2}}};
+	Expr λ1 = {λ, .u = {.abs = {{"α", 2}, &□1, &Π1}}};
 	Expr *E = &λ1;
 
 	argv0 = argv[0];
@@ -37,6 +38,7 @@ main(int argc, char *argv[])
 
 	fmtinstall(L'ⁿ', ⁿfmt);
 	fmtinstall(L'ₙ', ₙfmt);
+	fmtinstall(L'ς', ςfmt);
 	fmtinstall(L'ε', εfmt);
 	if((fd = open(argv[1], OREAD)) < 0)
 		sysfatal("open: %r\n");
@@ -51,7 +53,7 @@ main(int argc, char *argv[])
 	L.src = src;
 	L.p = src;
 	while(lex(&L, &t) > 0)
-		print("%.*s\n", utfnlen(t.p, t.len), t.p);
+		print("%ς\n", t.span);
 	if(L.error){
 		fprint(2, "error: %s\n", L.error);
 		free(src);

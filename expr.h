@@ -14,7 +14,7 @@ enum {
 };
 
 struct Abs {
-	char *x;
+	Slice x;
 	Expr *α;
 	Expr *e;
 };
@@ -25,7 +25,7 @@ struct Op {
 };
 
 struct Ivar {
-	char *name;
+	Slice name;
 	int i;
 };
 

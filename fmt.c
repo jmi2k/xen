@@ -1,6 +1,7 @@
 #include <u.h>
 #include <libc.h>
 
+#include "misc.h"
 #include "expr.h"
 #include "fmt.h"
 
@@ -45,32 +46,43 @@ static Rune ops[] = {
 };
 
 int
+ςfmt(Fmt *f)
+{
+	Slice ς;
+
+	ς = va_arg(f->args, Slice);
+	return fmtprint(f, "%.*s", utfnlen(ς.p, ς.len), ς.p);
+}
+
+int
 εfmt(Fmt *f)
 {
 	Expr *α, *e;
 	Rune op;
-	char *x;
+	Slice x;
 
 	e = va_arg(f->args, Expr *);
 	switch(e->type){
 	case λ:
-		x = e->u.abs.x
-			? e->u.abs.x
-			: "_";
+		x = e->u.abs.x;
+		if(!x.p){
+			x.p = "_";
+			x.len = 1;
+		}
 		α = e->u.abs.α;
 		op = ops[e->type];
 		e = e->u.abs.e;
 		return α->type == Hole
-			? fmtprint(f, "(%s %C %ε)", x, op, e)
-			: fmtprint(f, "((%s:%ε) %C %ε)", x, α, op, e);
+			? fmtprint(f, "(%ς %C %ε)", x, op, e)
+			: fmtprint(f, "((%ς:%ε) %C %ε)", x, α, op, e);
 	case Π:
 	case Σ:
 		x = e->u.abs.x;
 		α = e->u.abs.α;
 		op = ops[e->type];
 		e = e->u.abs.e;
-		return x
-			? fmtprint(f, "((%s:%ε) %C %ε)", x, α, op, e)
+		return x.p
+			? fmtprint(f, "((%ς:%ε) %C %ε)", x, α, op, e)
 			: fmtprint(f, "(%ε %C %ε)", α, op, e);
 	case App:
 		return fmtprint(f, "(%ε %ε)", e->u.op.l, e->u.op.r);
@@ -80,8 +92,8 @@ int
 			: fmtprint(f, "□%ₙ", e->u.□);
 	case Var:
 		return e->u.var.i > 0
-			? fmtprint(f, "%s%ⁿ", e->u.var.name, e->u.var.i)
-			: fmtprint(f, "%s", e->u.var.name);
+			? fmtprint(f, "%ς%ⁿ", e->u.var.name, e->u.var.i)
+			: fmtprint(f, "%ς", e->u.var.name);
 	case Hole:
 		return fmtprint(f, "_");
 	default:

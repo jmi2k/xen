@@ -1,6 +1,7 @@
 #include <u.h>
 #include <libc.h>
 
+#include "misc.h"
 #include "expr.h"
 
 typedef struct Bind Bind;
@@ -11,12 +12,12 @@ struct Bind {
 };
 
 static int
-lookup(Bind *Γ, char name[])
+lookup(Bind *Γ, Slice name)
 {
 	int i;
 
 	for(i = 1; Γ; i++){
-		if(strcmp(Γ->name, name) == 0)
+		if(strncmp(Γ->name, name.p, name.len) == 0)
 			return i;
 		Γ = Γ->prev;
 	}
@@ -34,9 +35,9 @@ _debruijn(Expr *e, Bind *Γ)
 	case Π:
 	case Σ:
 		_debruijn(e->u.abs.α, Γ);
-		if(e->u.abs.x){
+		if(e->u.abs.x.p){
 			bind.prev = Γ;
-			bind.name = e->u.abs.x;
+			bind.name = e->u.abs.x.p;
 			Γ = &bind;
 		}
 		_debruijn(e->u.abs.e, Γ);
