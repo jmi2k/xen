@@ -25,12 +25,6 @@ nfmt(Fmt *f)
 	return fmtprint(f, "%S", buf);
 }
 
-static Rune ops[] = {
-	[λ] = L'↦',
-	[Π] = L'→',
-	[Σ] = L'×',
-};
-
 int
 ςfmt(Fmt *f)
 {
@@ -56,16 +50,15 @@ int
 			x.len = 1;
 		}
 		α = e->u.abs.α;
-		op = ops[e->type];
 		e = e->u.abs.e;
 		return α->type == Hole
-			? fmtprint(f, "(%ς %C %ε)", x, op, e)
-			: fmtprint(f, "((%ς:%ε) %C %ε)", x, α, op, e);
+			? fmtprint(f, "(%ς ↦ %ε)", x, e)
+			: fmtprint(f, "((%ς:%ε) ↦ %ε)", x, α, e);
 	case Π:
 	case Σ:
 		x = e->u.abs.x;
 		α = e->u.abs.α;
-		op = ops[e->type];
+		op = L"×→"[e->type == Π];
 		e = e->u.abs.e;
 		return x.p
 			? fmtprint(f, "((%ς:%ε) %C %ε)", x, α, op, e)
