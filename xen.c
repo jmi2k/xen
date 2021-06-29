@@ -36,8 +36,8 @@ main(int argc, char *argv[])
 	if(argc != 2)
 		usage();
 
-	fmtinstall(L'ⁿ', ⁿfmt);
-	fmtinstall(L'ₙ', ₙfmt);
+	fmtinstall(L'ⁿ', nfmt);
+	fmtinstall(L'ₙ', nfmt);
 	fmtinstall(L'ς', ςfmt);
 	fmtinstall(L'ε', εfmt);
 	if((fd = open(argv[1], OREAD)) < 0)

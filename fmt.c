@@ -6,36 +6,22 @@
 #include "fmt.h"
 
 int
-ⁿfmt(Fmt *f)
+nfmt(Fmt *f)
 {
 	Rune buf[256];
-	Rune *p;
+	Rune *p, *lut;
 	int n;
 
 	n = va_arg(f->args, int);
 	p = buf;
+	lut = f->r == L'ⁿ'
+		? L"⁰¹²³⁴⁵⁶⁷⁸⁹"
+		: L"₀₁₂₃₄₅₆₇₈₉";
 	runesnprint(buf, sizeof(buf), "%d", n);
 	if(*p == L'-')
 		*p++ = L'⁻';
 	for(; *p; p++)
-		*p = L"⁰¹²³⁴⁵⁶⁷⁸⁹"[*p - '0'];
-	return fmtprint(f, "%S", buf);
-}
-
-int
-ₙfmt(Fmt *f)
-{
-	Rune buf[256];
-	Rune *p;
-	int n;
-
-	n = va_arg(f->args, int);
-	p = buf;
-	runesnprint(buf, sizeof(buf), "%d", n);
-	if(*p == L'-')
-		*p++ = L'₋';
-	for(; *p; p++)
-		*p = L"₀₁₂₃₄₅₆₇₈₉"[*p - '0'];
+		*p = lut[*p - '0'];
 	return fmtprint(f, "%S", buf);
 }
 
