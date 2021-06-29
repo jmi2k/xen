@@ -17,7 +17,7 @@ lookup(Bind *Γ, Slice name)
 	int i;
 
 	for(i = 1; Γ; i++){
-		if(strncmp(Γ->name, name.p, name.len) == 0)
+		if(strslicecmp(Γ->name, name) == 0)
 			return i;
 		Γ = Γ->prev;
 	}

@@ -4,3 +4,5 @@ struct Slice {
 	char *p;
 	int len;
 };
+
+int strslicecmp(char [], Slice);

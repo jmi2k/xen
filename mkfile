@@ -7,5 +7,6 @@ OFILES=\
 	expr.$O\
 	fmt.$O\
 	lex.$O\
+	misc.$O\
 
 </sys/src/cmd/mkone
