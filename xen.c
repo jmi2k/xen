@@ -3,6 +3,7 @@
 
 #include "expr.h"
 #include "fmt.h"
+#include "lex.h"
 
 void usage(void);
 void main(int, char *[]);
@@ -17,6 +18,12 @@ usage(void)
 void
 main(int argc, char *argv[])
 {
+	Lexer L;
+	Token t;
+	char *src;
+	vlong len;
+	int fd;
+
 	Expr □1 = {□};
 	Expr α1 = {Var, .u = {.var = {"α"}}};
 	Expr α2 = {Var, .u = {.var = {"α"}}};
@@ -25,13 +32,35 @@ main(int argc, char *argv[])
 	Expr *E = &λ1;
 
 	argv0 = argv[0];
-	if(argc > 1)
+	if(argc != 2)
 		usage();
+
 	fmtinstall(L'ⁿ', ⁿfmt);
 	fmtinstall(L'ₙ', ₙfmt);
 	fmtinstall(L'ε', εfmt);
+	if((fd = open(argv[1], OREAD)) < 0)
+		sysfatal("open: %r\n");
+	len = seek(fd, 0, 2);
+	seek(fd, 0, 0);
+	if((src = malloc(len+1)) == nil)
+		sysfatal("malloc: %r");
+	src[len] = '\0';
+	if(readn(fd, src, len) < 0)
+		sysfatal("readn: %r");
+	print("%s\n", src);
+	L.src = src;
+	L.p = src;
+	while(lex(&L, &t) > 0)
+		print("%.*s\n", utfnlen(t.p, t.len), t.p);
+	if(L.error){
+		fprint(2, "error: %s\n", L.error);
+		free(src);
+		exits("lex");
+	}
 	print("%ε\n", E);
 	debruijn(E);
 	print("%ε\n", E);
+
+	free(src);
 	exits(nil);
 }

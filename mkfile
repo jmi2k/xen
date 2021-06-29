@@ -6,5 +6,6 @@ OFILES=\
 	$TARG.$O\
 	expr.$O\
 	fmt.$O\
+	lex.$O\
 
 </sys/src/cmd/mkone
