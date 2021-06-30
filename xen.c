@@ -54,11 +54,8 @@ main(int argc, char *argv[])
 	L.p = src;
 	while(lex(&L, &t) > 0)
 		print("%ς\n", t.span);
-	if(L.error){
-		fprint(2, "error: %s\n", L.error);
-		free(src);
-		exits("lex");
-	}
+	if(L.error)
+		sysfatal("lex: %s", L.error);
 	print("%ε\n", E);
 	debruijn(E);
 	print("%ε\n", E);
