@@ -1,6 +1,3 @@
-typedef struct Abs Abs;
-typedef struct Op Op;
-typedef struct Ivar Ivar;
 typedef struct Core Core;
 
 enum {
@@ -13,28 +10,12 @@ enum {
 	Hole,
 };
 
-struct Abs {
-	Slice x;
-	Core *α;
-	Core *e;
-};
-
-struct Op {
-	Core *l;
-	Core *r;
-};
-
-struct Ivar {
-	Slice name;
-	int i;
-};
-
 struct Core {
 	int type;
 	union {
-		Abs abs;
-		Op op;
-		Ivar var;
+		struct { Slice x; Core *α, *e; } abs;
+		struct { Core *l, *r; } op;
+		struct { Slice name; int i; } var;
 		int □;
 	} u;
 };
