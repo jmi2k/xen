@@ -17,7 +17,7 @@ struct Core {
 		struct { Core *l, *r; } op;
 		struct { Slice name; int i; } var;
 		int □;
-	} u;
+	};
 };
 
 void debruijn(Core *);

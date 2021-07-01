@@ -34,20 +34,20 @@ _debruijn(Core *e, Bind *Γ)
 	case λ:
 	case Π:
 	case Σ:
-		_debruijn(e->u.abs.α, Γ);
-		if(e->u.abs.x.p){
+		_debruijn(e->abs.α, Γ);
+		if(e->abs.x.p){
 			bind.prev = Γ;
-			bind.name = e->u.abs.x.p;
+			bind.name = e->abs.x.p;
 			Γ = &bind;
 		}
-		_debruijn(e->u.abs.e, Γ);
+		_debruijn(e->abs.e, Γ);
 		break;
 	case App:
-		_debruijn(e->u.op.l, Γ);
-		_debruijn(e->u.op.r, Γ);
+		_debruijn(e->op.l, Γ);
+		_debruijn(e->op.r, Γ);
 		break;
 	case Var:
-		e->u.var.i = lookup(Γ, e->u.var.name);
+		e->var.i = lookup(Γ, e->var.name);
 		break;
 	}
 }

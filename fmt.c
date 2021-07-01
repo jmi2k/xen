@@ -44,35 +44,35 @@ int
 	e = va_arg(f->args, Core *);
 	switch(e->type){
 	case λ:
-		x = e->u.abs.x;
+		x = e->abs.x;
 		if(!x.p){
 			x.p = "_";
 			x.len = 1;
 		}
-		α = e->u.abs.α;
-		e = e->u.abs.e;
+		α = e->abs.α;
+		e = e->abs.e;
 		return α->type == Hole
 			? fmtprint(f, "(%ς ↦ %ε)", x, e)
 			: fmtprint(f, "((%ς:%ε) ↦ %ε)", x, α, e);
 	case Π:
 	case Σ:
-		x = e->u.abs.x;
-		α = e->u.abs.α;
+		x = e->abs.x;
+		α = e->abs.α;
 		op = L"×→"[e->type == Π];
-		e = e->u.abs.e;
+		e = e->abs.e;
 		return x.p
 			? fmtprint(f, "((%ς:%ε) %C %ε)", x, α, op, e)
 			: fmtprint(f, "(%ε %C %ε)", α, op, e);
 	case App:
-		return fmtprint(f, "(%ε %ε)", e->u.op.l, e->u.op.r);
+		return fmtprint(f, "(%ε %ε)", e->op.l, e->op.r);
 	case □:
-		return e->u.□ == 0
+		return e->□ == 0
 			? fmtprint(f, "⊤")
-			: fmtprint(f, "□%ₙ", e->u.□);
+			: fmtprint(f, "□%ₙ", e->□);
 	case Var:
-		return e->u.var.i > 0
-			? fmtprint(f, "%ς%ⁿ", e->u.var.name, e->u.var.i)
-			: fmtprint(f, "%ς", e->u.var.name);
+		return e->var.i > 0
+			? fmtprint(f, "%ς%ⁿ", e->var.name, e->var.i)
+			: fmtprint(f, "%ς", e->var.name);
 	case Hole:
 		return fmtprint(f, "_");
 	default:

@@ -26,10 +26,10 @@ main(int argc, char *argv[])
 	int fd;
 
 	Core □1 = {□};
-	Core α1 = {Var, .u = {.var = {"α", 2}}};
-	Core α2 = {Var, .u = {.var = {"α", 2}}};
-	Core Π1 = {Π, .u = {.abs = {{nil}, &α1, &α2}}};
-	Core λ1 = {λ, .u = {.abs = {{"α", 2}, &□1, &Π1}}};
+	Core α1 = {Var, {.var = {"α", 2}}};
+	Core α2 = {Var, {.var = {"α", 2}}};
+	Core Π1 = {Π, {.abs = {{nil}, &α1, &α2}}};
+	Core λ1 = {λ, {.abs = {{"α", 2}, &□1, &Π1}}};
 	Core *E = &λ1;
 
 	argv0 = argv[0];
