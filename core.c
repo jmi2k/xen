@@ -2,7 +2,7 @@
 #include <libc.h>
 
 #include "misc.h"
-#include "expr.h"
+#include "core.h"
 
 typedef struct Bind Bind;
 
@@ -26,7 +26,7 @@ lookup(Bind *Γ, Slice name)
 }
 
 static void
-_debruijn(Expr *e, Bind *Γ)
+_debruijn(Core *e, Bind *Γ)
 {
 	Bind bind;
 
@@ -53,7 +53,7 @@ _debruijn(Expr *e, Bind *Γ)
 }
 
 void
-debruijn(Expr *e)
+debruijn(Core *e)
 {
 	_debruijn(e, nil);
 }

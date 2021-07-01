@@ -2,7 +2,7 @@
 #include <libc.h>
 
 #include "misc.h"
-#include "expr.h"
+#include "core.h"
 #include "fmt.h"
 
 int
@@ -37,11 +37,11 @@ int
 int
 εfmt(Fmt *f)
 {
-	Expr *α, *e;
+	Core *α, *e;
 	Rune op;
 	Slice x;
 
-	e = va_arg(f->args, Expr *);
+	e = va_arg(f->args, Core *);
 	switch(e->type){
 	case λ:
 		x = e->u.abs.x;

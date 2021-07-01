@@ -1,7 +1,7 @@
 typedef struct Abs Abs;
 typedef struct Op Op;
 typedef struct Ivar Ivar;
-typedef struct Expr Expr;
+typedef struct Core Core;
 
 enum {
 	λ,
@@ -15,13 +15,13 @@ enum {
 
 struct Abs {
 	Slice x;
-	Expr *α;
-	Expr *e;
+	Core *α;
+	Core *e;
 };
 
 struct Op {
-	Expr *l;
-	Expr *r;
+	Core *l;
+	Core *r;
 };
 
 struct Ivar {
@@ -29,7 +29,7 @@ struct Ivar {
 	int i;
 };
 
-struct Expr {
+struct Core {
 	int type;
 	union {
 		Abs abs;
@@ -39,4 +39,4 @@ struct Expr {
 	} u;
 };
 
-void debruijn(Expr *);
+void debruijn(Core *);
